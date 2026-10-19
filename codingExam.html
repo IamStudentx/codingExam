@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Amortization Calculator</title>
+</head>
+<body>
+
+    <p>Name: Nicholas Lewis</p>
+    <p>Email: ndlewis2@my.waketech.edu</p>
+    <p>Date: October 19, 2026</p>
+
+    <h1>Amortization Calculator</h1>
+
+    <button id="calculateButton">Calculate Mortgage</button>
+
+    <div id="output"></div>
+
+    <script>
+        document.getElementById("calculateButton").addEventListener("click", function() {
+
+            let loanAmount = Number(prompt("Enter the loan amount without commas:"));
+            let termYears = Number(prompt("Enter the loan term (15 or 30 years):"));
+
+            if (termYears != 15 && termYears != 30) {
+                alert("The loan term must be 15 or 30 years.");
+                return;
+            }
+
+            let interestRate = 0.0575;
+
+            let termMonths = termYears * 12;
+
+            let monthlyPayment = Number(
+                (((interestRate / 12) * loanAmount) /
+                (1 - Math.pow(1 + (interestRate / 12), (termYears * -12)))).toFixed(2)
+            );
+
+            let totalInterest = Number(
+                ((monthlyPayment * termMonths) - loanAmount).toFixed(2)
+            );
+
+            let totalLoan = Number(
+                (loanAmount + totalInterest).toFixed(2)
+            );
+
+            let output = document.getElementById("output");
+
+            output.innerHTML = "";
+
+            output.innerHTML += "<p>Mortgage Term: " + termYears + " years</p>";
+            output.innerHTML += "<p>Mortgage Interest Rate: 5.75%</p>";
+            output.innerHTML += "<p>Original Mortgage Amount: $" + loanAmount.toFixed(2) + "</p>";
+            output.innerHTML += "<p>Total Interest Amount: $" + totalInterest.toFixed(2) + "</p>";
+            output.innerHTML += "<p>Total Mortgage Amount: $" + totalLoan.toFixed(2) + "</p>";
+            output.innerHTML += "<p>Monthly Payment: $" + monthlyPayment.toFixed(2) + "</p>";
+
+            output.innerHTML += "<h2>Monthly Amortization Schedule</h2>";
+
+            let balance = totalLoan;
+
+            for (let month = 1; month <= termMonths; month++) {
+
+                balance = Number((balance - monthlyPayment).toFixed(2));
+
+                if (month == termMonths || balance < 0) {
+                    balance = 0;
+                }
+
+                output.innerHTML += "<p>Month " + month + " - $" + monthlyPayment.toFixed(2) + " - $" + balance.toFixed(2) + "</p>";
+
+                if (balance == 0) {
+                    output.innerHTML += "<p>Ending...</p>";
+                    break;
+                }
+            }
+
+        });
+    </script>
+
+</body>
+</html>
